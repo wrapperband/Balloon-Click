@@ -5,9 +5,8 @@
 
 <html lang="en">
 
+<html>
     <head>
-    <meta charset="UTF-8">
-    <title>Balloon Squisher</title>
         <script>
         document.addEventListener("DOMContentLoaded", function() {
 
@@ -16,20 +15,25 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 document.body.appendChild(canvas);
 var ctx = canvas.getContext('2d');
+
 var mouse = {
   x: undefined,
   y: undefined
 };
+
 var animals = [];
+
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
 function randomColor() {
   var r = getRandomInt(0, 255);
   var g = getRandomInt(0, 255);
   var b = getRandomInt(0, 255);
   return 'rgb(' + r + ',' + g + ',' + b + ')';
 }
+
 function Ball(x, y, radius, color) {
   this.x = x;
   this.y = y;
@@ -65,6 +69,7 @@ function Ball(x, y, radius, color) {
     other.color = randomColor();
   };
 }
+
 function addBall() {
   var radius = getRandomInt(10, 20);
   var x = getRandomInt(radius, canvas.width - radius);
@@ -72,6 +77,7 @@ function addBall() {
   var color = randomColor();
   animals.push(new Ball(x, y, radius, color));
 }
+
 function loop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   for (var i = 0; i < animals.length; i++) {
@@ -91,18 +97,17 @@ function loop() {
   }
   requestAnimationFrame(loop);
 }
+
 loop();
+
 document.addEventListener('mousemove', function(e) {
   mouse.x = e.clientX;
   mouse.y = e.clientY;
 });
+
 document.addEventListener('click', function() {
   addBall();
 });
+});
         </script>
-    </head>
-    <body style="margin: 0;">
-    <h1>Welcome to Balloon Click</h1>
-    <p>In this game, you click on the screen to produce a big "Bang" as fast as you can!</p>
-       </body>
 </html>
