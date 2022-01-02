@@ -1,0 +1,112 @@
+<!-- Wierd Basket
+##  Specification and original idea : Dr A J Doyle
+##  Coded by OpenAI Javascript Codex  -->
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+/* clicking the screen draws expanding hoops, add  'Master List of Shapes' in the game */
+var canvas = document.createElement('canvas');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+document.body.appendChild(canvas);
+var ctx = canvas.getContext('2d');
+var mouse = {
+  x: undefined,
+  y: undefined
+};
+var maxRadius = 60;
+var minRadius = 1;
+var colorArray = ['#FA0010', '#01Fe00', '#0001FF', '#FFBF10', '#0BF1FF', '#CF10FF', '#DA1FFF', '#DE1000'];
+var colorIndex = 0;
+document.addEventListener('mousemove', function(event) {
+  mouse.x = event.clientX;
+  mouse.y = event.clientY;
+});
+function Circle(x, y, dx, dy, radius) {
+  this.x = x;
+  this.y = y;
+  this.dx = dx;
+  this.dy = dy;
+  this.radius = radius;
+  this.minRadius = radius;
+  colorIndex = colorIndex + 1;
+  if ( colorIndex > 8 ) {
+  colorIndex = 1
+}
+  this.color = colorArray[colorIndex];
+  this.draw = function() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+  };
+  this.update = function() {
+    if (this.x + this.radius > innerWidth || this.x - this.radius < 0) {
+      this.dx = -this.dx;
+    }
+    if (this.y + this.radius > innerHeight || this.y - this.radius < 0) {
+      this.dy = -this.dy;
+    }
+    this.x += this.dx;
+    this.y += this.dy;
+    this.radius += 0.5;
+    if (this.radius > maxRadius) {
+      this.radius = this.minRadius;
+    }
+  };
+  this.checkOverlap = function(other) {
+    if (this === other) {
+      return false;
+    }
+    var distance = Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
+    return distance < this.radius + other.radius;
+  };
+}
+var circleArray = [];
+function init() {
+  circleArray = [];
+  for (var i = 0; i < 100; i++) {
+    var radius = Math.random() * 10 + 5;
+    var x = Math.random() * (innerWidth - radius * 2) + radius;
+    var y = Math.random() * (innerHeight - radius * 2) + radius;
+    var dx = (Math.random() - 0.5) * 2;
+    var dy = (Math.random() - 0.5) * 2;
+    circleArray.push(new Circle(x, y, dx, dy, radius));
+  }
+}
+function animate() {
+  requestAnimationFrame(animate);
+  ctx.clearRect(0, 0, innerWidth, innerHeight);
+  for (var i = 0; i < circleArray.length; i++) {
+    var c = circleArray[i];
+    c.draw();
+    c.update();
+    for (var j = 0; j < circleArray.length; j++) {
+      var c2 = circleArray[j];
+      if (c.checkOverlap(c2)) {
+        var dx = c.x - c2.x;
+        var dy = c.y - c2.y;
+        var angle = Math.atan2(dy, dx);
+        var tx = Math.cos(angle) * (c.radius + c2.radius);
+        var ty = Math.sin(angle) * (c.radius + c2.radius);
+        c.x -= tx;
+        c.y -= ty;
+        c2.x += tx;
+        c2.y += ty;
+      }
+    }
+  }
+}
+init();
+animate();
+
+
+
+});
+        </script>
+    </head>
+</html>
