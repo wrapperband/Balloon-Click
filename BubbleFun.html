@@ -1,0 +1,64 @@
+<!-- Bubble Fun
+##  Specification and original idea : Dr A J Doyle
+##  Coded by OpenAI Javascript Codex  
+-->
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+/* create a random number of bubbles which move all over the screen when a button is pressed, if you click near them they shrink */
+var bubbles = [];
+var numBubbles = 10;
+var maxRadius = 100;
+var minRadius = 10;
+var maxSpeed = 10;
+var minSpeed = 1;
+var maxX = window.innerWidth;
+var maxY = window.innerHeight;
+var minX = 0;
+var minY = 0;
+var button = document.createElement('button');
+button.innerHTML = 'Press me';
+document.body.appendChild(button);
+button.addEventListener('click', function() {
+  for (var i = 0; i < numBubbles; i++) {
+    var bubble = document.createElement('div');
+    bubble.style.width = bubble.style.height = Math.floor(Math.random() * (maxRadius - minRadius) + minRadius) + 'px';
+    bubble.style.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+    bubble.style.position = 'absolute';
+    bubble.style.left = Math.floor(Math.random() * (maxX - minX) + minX) + 'px';
+    bubble.style.top = Math.floor(Math.random() * (maxY - minY) + minY) + 'px';
+    bubble.style.borderRadius = '50%';
+    bubble.style.transition = 'all ' + Math.floor(Math.random() * (maxSpeed - minSpeed) + minSpeed) + 's linear';
+    document.body.appendChild(bubble);
+    bubbles.push(bubble);
+  }
+}, false);
+
+/* move the bubbles */
+var moveBubbles = function() {
+  for (var i = 0; i < bubbles.length; i++) {
+    var bubble = bubbles[i];
+    var x = bubble.style.left;
+    var y = bubble.style.top;
+    var radius = bubble.style.width;
+    if (x < minX || x > maxX || y < minY || y > maxY) {
+      bubble.style.left = Math.floor(Math.random() * (maxX - minX) + minX) + 'px';
+      bubble.style.top = Math.floor(Math.random() * (maxY - minY) + minY) + 'px';
+    } else {
+      bubble.style.left = (parseInt(x) + Math.floor(Math.random() * (maxSpeed - minSpeed) + minSpeed)) + 'px';
+      bubble.style.top = (parseInt(y) + Math.floor(Math.random() * (maxSpeed - minSpeed) + minSpeed)) + 'px';
+    }
+  }
+  setTimeout(moveBubbles, 100);
+};
+moveBubbles();
+
+
+});
+        </script>
+    </head>
+  </html>

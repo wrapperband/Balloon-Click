@@ -1,0 +1,114 @@
+<!-- Wierd Basket
+##  Specification and original idea : Dr A J Doyle
+##  Coded by OpenAI Javascript Codex  -->
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+/* The "Moon Game" make crescent shapes which can catch the moving balls */
+var canvas = document.createElement('canvas');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+document.body.appendChild(canvas);
+var ctx = canvas.getContext('2d');
+var balls = [];
+var numBalls = 10;
+var maxSpeed = 10;
+var minSpeed = 1;
+var maxRadius = 50;
+var minRadius = 10;
+var maxX = canvas.width;
+var minX = 0;
+var maxY = canvas.height;
+var minY = 0;
+var basket = document.createElement('div');
+basket.style.position = 'absolute';
+basket.style.left = '50%';
+basket.style.top = '50%';
+basket.style.width = '50px';
+basket.style.height = '50px';
+basket.style.backgroundColor = '#00FF00';
+document.body.appendChild(basket);
+var score = 0;
+var scoreDiv = document.createElement('div');
+scoreDiv.innerHTML = 'Score: ' + score;
+document.body.appendChild(scoreDiv);
+var moveLeft = false;
+var moveRight = false;
+function Ball(x, y, radius, color) {
+  this.x = x;
+  this.y = y;
+  this.radius = radius;
+  this.color = color;
+  this.speedX = Math.random() * (maxSpeed - minSpeed) + minSpeed;
+  this.speedY = Math.random() * (maxSpeed - minSpeed) + minSpeed;
+  this.draw = function() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+  };
+  this.update = function() {
+    if (this.x + this.radius > maxX) {
+      this.speedX = -(this.speedX);
+    } else if (this.x - this.radius < minX) {
+      this.speedX = -(this.speedX);
+    }
+    if (this.y + this.radius > maxY) {
+      this.speedY = -(this.speedY);
+    } else if (this.y - this.radius < minY) {
+      this.speedY = -(this.speedY);
+    }
+    this.x += this.speedX;
+    this.y += this.speedY;
+    this.draw();
+  };
+}
+for (var i = 0; i < numBalls; i++) {
+  var radius = Math.random() * (maxRadius - minRadius) + minRadius;
+  var x = Math.random() * (maxX - minX) + minX;
+  var y = Math.random() * (maxY - minY) + minY;
+  var color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+  balls.push(new Ball(x, y, radius, color));
+}
+function moveBasket() {
+  if (moveLeft && basket.offsetLeft > 0) {
+    basket.style.left = (parseInt(basket.style.left, 10) - 10) + 'px';
+  }
+  if (moveRight && basket.offsetLeft < window.innerWidth - basket.offsetWidth) {
+    basket.style.left = (parseInt(basket.style.left, 10) + 10) + 'px';
+  }
+}
+function checkCollision() {
+  for (var i = 0; i < balls.length; i++) {
+    var ball = balls[i];
+    if (ball.x + ball.radius > basket.offsetLeft &&
+        ball.x - ball.radius < basket.offsetLeft + basket.offsetWidth &&
+        ball.y + ball.radius > basket.offsetTop &&
+        ball.y - ball.radius < basket.offsetTop + basket.offsetHeight) {
+      score++;
+      scoreDiv.innerHTML = 'Score: ' + score;
+      var radius = Math.random() * (maxRadius - minRadius) + minRadius;
+      var x = Math.random() * (maxX - minX) + minX;
+      var y = Math.random() * (maxY - minY) + minY;
+      var color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+      balls[i] = new Ball(x, y, radius, color);
+function loop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (var i = 0; i < balls.length; i++) {
+    balls[i].update();
+  }
+  moveBasket();
+  checkCollision();
+  requestAnimationFrame(loop);
+}
+loop();
+
+
+});
+        </script>
+    </head>
+</html>
