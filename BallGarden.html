@@ -1,4 +1,4 @@
-<!-- Proton Garden
+<!-- Ball Garden
 ##  Specification and original idea : Dr A J Doyle
 ##  Coded by OpenAI Javascript Codex  -->
 <!DOCTYPE html>
@@ -54,10 +54,10 @@ function loop() {
       if (distance < balls[i].radius + balls[j].radius) {
         balls[i].color = '#' + Math.floor(Math.random() * 16777215).toString(16);
         balls[j].color = '#' + Math.floor(Math.random() * 16777215).toString(16);
-        balls[i].speedX = -balls[i].speedX - 1;
-        balls[i].speedY = -balls[i].speedY - 1;
-        balls[j].speedX = -balls[j].speedX + 1;
-        balls[j].speedY = -balls[j].speedY + 1;
+        balls[i].speedX = -balls[i].speedX - (1 * (balls[j].radius / balls[i].radius));
+        balls[i].speedY = -balls[i].speedY - (1 * (balls[j].radius / balls[i].radius));
+        balls[j].speedX = -balls[j].speedX + (1 * (balls[i].radius / balls[j].radius));
+        balls[j].speedY = -balls[j].speedY + (1 * (balls[i].radius / balls[j].radius));
       }
     }
   }
@@ -107,8 +107,23 @@ button.addEventListener('click', function() {
       balls[i].radius = 1; }
   }
 });
+/* make a slider that increases or decreases the balls speed if its moved left and increases when the slider moves right */
+var slider = document.createElement('input');
+slider.type = 'range';
+slider.min = 0;
+slider.max = 10;
+slider.value = 5;
+document.body.appendChild(slider);
+slider.addEventListener('change', function() {
+  for (var i = 0; i < balls.length; i++) {
+    balls[i].speedX = balls[i].speedX * (slider.value / (slider.max - slider.min));
+    balls[i].speedY = balls[i].speedY * (slider.value / (slider.max - slider.min));
+ }
+});
+
 
 });
+
         </script>
     </head>
 </html>
